@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const exphbs  = require('express-handlebars')
 
-//Handlebars Middleware
+//the Handlebars Middleware
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
