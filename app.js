@@ -3,19 +3,23 @@ const app = express()
 const exphbs  = require('express-handlebars')
 
 //the Handlebars Middleware
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({
+    defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 
 //Index route
 app.get('/', (req, res) => {
+    const title = 'Welcome Carter!'
 
-    res.send('INDEX!')
+    res.render('index', {
+        title: title
+    })
 })
 
 // About route
 app.get('/about', (req, res) => {
-    res.send('All about King Hashim!')
+    res.render('about')
 })
 
 
