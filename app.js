@@ -10,10 +10,17 @@ app.set('view engine', 'handlebars');
 
 //Index route
 app.get('/', (req, res) => {
-    const title = 'Welcome Carter!'
+    const me = {
+        fname: 'Hashim',
+        lname: 'Warren',
+        age: '38',
+        height: '5 foot 10',
+        weight: '360 lbs'
+    }
 
     res.render('index', {
-        title: title
+        me.fname: fname,
+        me.lname: lname
     })
 })
 
