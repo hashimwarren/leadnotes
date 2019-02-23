@@ -14,6 +14,10 @@ mongoose.connect('mongodb://localhost/leadnotes-dev', {
 .then(() => console.log('MongoDB connected...'))
 .catch(err => console.log(err))
 
+//Load Leads model
+require('./models/Lead')
+const Lead = mongoose.model('leads')
+
 
 //the Handlebars Middleware
 app.engine('handlebars', exphbs({
