@@ -1,6 +1,19 @@
 const express = require('express')
-const app = express()
 const exphbs  = require('express-handlebars')
+const mongoose = require('mongoose')
+
+const app = express()
+
+//Map global promise - get rid of warning
+mongoose.Promise = global.Promise
+
+//Connect to Mongoose
+mongoose.connect('mongodb://localhost/leadnotes-dev', {
+    useMongoClient: true
+})
+.then(() => console.log('MongoDB connected...'))
+.catch(err => console.log(err))
+
 
 //the Handlebars Middleware
 app.engine('handlebars', exphbs({
@@ -10,7 +23,7 @@ app.set('view engine', 'handlebars');
 
 //Index route
 app.get('/', (req, res) => {
-    const title = 'Welcome Carter!'
+    const title = 'Welcome Alex!'
 
     res.render('index', {
         title: title
