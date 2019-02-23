@@ -55,11 +55,22 @@ app.post('/notes', (req, res) => {
     let errors = []
     if (!req.body.name) {
         errors.push({text: 'Please add a name'})
-    } else {
+    }
+    if (!req.body.note) {
+        errors.push({text: 'Please add a note'})
+    }
+    if (errors.length > 0) {
+        res.render('notes/add', {
+            errors: errors,
+            name: req.body.name,
+            note: req.body.note
+        })
+    }
+    else {
+        res.send('passed')
 
     }
-    console.log(req.body)
-    res.send('ok')
+    
 })
 
 
