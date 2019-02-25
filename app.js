@@ -68,9 +68,10 @@ app.post('/notes', (req, res) => {
     }
     else {
         res.send('passed')
+        console.log(req.body.name)
 
     }
-    
+
 })
 
 
