@@ -11,7 +11,8 @@ mongoose.Promise = global.Promise
 
 //Connect to Mongoose
 mongoose.connect('mongodb://localhost/leadnotes-dev', {
-    useMongoClient: true
+    //useMongoClient: true
+    useNewUrlParser: true
 })
 .then(() => console.log('MongoDB connected...'))
 .catch(err => console.log(err))
@@ -51,26 +52,33 @@ app.get('/notes/add', (req, res) => {
 })
 
 //Process form
-app.post('/notes', (req, res) => {
+app.post('/notes', (req, res, next) => {
     let errors = []
     if (!req.body.name) {
         errors.push({text: 'Please add a name'})
     }
-    if (!req.body.note) {
+    if (!req.body.notes) {
         errors.push({text: 'Please add a note'})
     }
     if (errors.length > 0) {
         res.render('notes/add', {
             errors: errors,
             name: req.body.name,
-            note: req.body.note
+            notes: req.body.notes
         })
     }
     else {
-        res.send('passed')
-        console.log(req.body.name)
-
-    }
+        const newUser = {
+          name: req.body.name,
+          notes: req.body.notes
+        }
+        new Lead(newUser)
+          .save()
+          .then(idea => {
+            res.redirect('/notes');
+          })
+          .catch(next)
+      }
 
 })
 
