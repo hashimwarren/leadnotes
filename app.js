@@ -46,6 +46,21 @@ app.get('/about', (req, res) => {
     res.render('about')
 })
 
+//Notes index page
+app.get('/notes', (req, res) => {
+    //Bring in Leads model and use find methof
+    Lead.find({})
+        .sort({date:'desc'})
+        .then(notes => {
+            res.render('notes/index', {
+                notes: notes
+            })
+
+    })
+
+
+})
+
 //Add Notes form
 app.get('/notes/add', (req, res) => {
     res.render('notes/add')
