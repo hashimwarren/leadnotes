@@ -1,0 +1,22 @@
+{{#each errors}}
+{{! Loop over error array}}
+<div class="alert alert-danger">{{text}}</div>
+{{else}}
+
+{{/each}}
+
+<div class="card card-body">
+    <h3>Edit Lead Note</h3>
+    <form action="/notes/{{lead.id}}?_method=PUT" method="POST">
+        <input type="hidden" name="_method" value="PUT">
+        <div class="formgroup">
+            <label for="name">Full Name</label>
+            <input type="text" class="form-control" name="name" value="{{lead.name}}" required>
+        </div>
+        <div class="formgroup">
+            <label for="notes">Note</label>
+            <textarea type="text" class="form-control" name="notes" value="test" required>{{lead.notes}}</textarea>
+        </div>
+        <button class="btn btn-primary">Submit</button>
+    </form>
+</div>

@@ -1,8 +1,8 @@
 const express = require('express')
 const exphbs  = require('express-handlebars')
+const methodOverride = require('method-override')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-
 
 const app = express()
 
@@ -10,6 +10,7 @@ const app = express()
 mongoose.Promise = global.Promise
 
 //Connect to Mongoose
+//TODO check out babel
 mongoose.connect('mongodb://localhost/leadnotes-dev', {
     //useMongoClient: true
     useNewUrlParser: true
@@ -30,6 +31,9 @@ app.set('view engine', 'handlebars');
 //Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+//Method Overrise middleware
+app.use(methodOverride('_method'))
 
 
 //Index route
@@ -66,6 +70,21 @@ app.get('/notes/add', (req, res) => {
     res.render('notes/add')
 })
 
+//Edit Notes form
+//Use parameter in URL - 'id' - to select single record
+app.get('/notes/edit/:id', (req, res) => {
+    Lead.findOne({
+        //get the id and pass it into the object
+        _id: req.params.id
+    })
+    .then(lead => {
+        res.render('notes/edit', {
+            lead:lead
+        })
+    } )
+
+})
+
 //Process form
 app.post('/notes', (req, res, next) => {
     let errors = []
@@ -89,7 +108,7 @@ app.post('/notes', (req, res, next) => {
         }
         new Lead(newUser)
           .save()
-          .then(idea => {
+          .then(lead => { //TODO double check if "idea" should be here
             res.redirect('/notes');
           })
           .catch(next)
@@ -97,6 +116,32 @@ app.post('/notes', (req, res, next) => {
 
 })
 
+//Edit form process
+app.put("/notes/:id", (req, res) => {
+    Lead.findOne({
+        _id: req.params.id
+    })
+    .then(lead => {
+        //new values
+        lead.name = req.body.name;
+        lead.notes = req.body.notes;
+
+        lead.save()
+            .then(lead => {
+                res.redirect('/notes')
+            })
+    })
+
+})
+
+//Delete Idea
+app.delete('/notes/:id', (req, res) => {
+    Lead.remove({_id: req.params.id})
+        .then(() => {
+            res.redirect('/notes')
+        })
+
+})
 
 const port = 5000;
 app.listen(port, () => {

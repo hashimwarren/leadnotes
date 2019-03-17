@@ -3,7 +3,13 @@
 <div class="card card-body">
     <h4 class="card-title">{{name}}</h4>
     <p>{{notes}}</p>
+    <a class="btn btn-dark btn-block mb-2" href="/notes/edit/{{id}}">Edit</a>
+    <form method="post" action="/notes/{{id}}?_method=DELETE" >
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="submit" class="btn btn-danger btn-block" value="DELETE">
+    </form>
 </div>
+
 {{else}}
 <p>No LeadNotes listed</p>
 {{/each}}
