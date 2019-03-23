@@ -1,6 +1,8 @@
 const express = require('express')
 const exphbs  = require('express-handlebars')
 const methodOverride = require('method-override')
+const flash = require('connect-flash')
+const session = require('express-session')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 
@@ -35,6 +37,24 @@ app.use(bodyParser.json())
 //Method Overrise middleware
 app.use(methodOverride('_method'))
 
+//Express session middleware
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+  }))
+
+// Connect Flash
+app.use(flash())
+
+// Global variables
+app.use(function(req, res, next){
+    res.locals.success_msg = req.flash('success_msg')
+    res.locals.error_msg = req.flash('error_msg')
+    res.locals.error = req.flash('error')
+    next()
+
+})
 
 //Index route
 app.get('/', (req, res) => {
@@ -109,7 +129,8 @@ app.post('/notes', (req, res, next) => {
         new Lead(newUser)
           .save()
           .then(lead => { //TODO double check if "idea" should be here
-            res.redirect('/notes');
+          req.flash('success_msg', 'Lead Note added')
+          res.redirect('/notes');
           })
           .catch(next)
       }
@@ -128,6 +149,7 @@ app.put("/notes/:id", (req, res) => {
 
         lead.save()
             .then(lead => {
+                req.flash('success_msg', 'Lead Note updated')
                 res.redirect('/notes')
             })
     })
@@ -138,6 +160,7 @@ app.put("/notes/:id", (req, res) => {
 app.delete('/notes/:id', (req, res) => {
     Lead.remove({_id: req.params.id})
         .then(() => {
+            req.flash('success_msg', 'Lead note removed')
             res.redirect('/notes')
         })
 
